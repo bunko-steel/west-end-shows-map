@@ -1,9 +1,11 @@
-import { getTheatresWithShows } from "./data";
+import MapCanvas from "./components/MapCanvas";
 
 function App() {
-  const theatres = getTheatresWithShows();
-  console.log(theatres);
-  return <pre>{JSON.stringify(theatres, null, 2)}</pre>;
+  return (
+    <div style={{ padding: "2rem 0" }}>
+      <MapCanvas />
+    </div>
+  );
 }
 
 export default App;
