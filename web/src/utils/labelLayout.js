@@ -1,17 +1,11 @@
 import { forceSimulation, forceX, forceY } from "d3-force";
 
-// Rough estimate of rendered text width without needing to measure the
-// actual DOM - good enough for collision detection, doesn't need to be exact.
+// Rough estimate of rendered text width
 function estimateLabelWidth(text, fontSize) {
   return text.length * fontSize * 0.55;
 }
 
-// Resolves overlaps between label bounding boxes directly (rectangle vs.
-// rectangle), rather than approximating each label as a circle. A circle
-// sized to fit a wide label wastes a lot of space above/below it, which was
-// causing labels to get shoved away even when they didn't really overlap.
-// Only nudges nodes along whichever axis needs the smaller correction, and
-// only by as much as the actual overlap requires.
+// Resolves overlaps between label bounding boxes
 function forceRectCollide(padding = 1, strength = 0.5) {
   let nodes;
 
@@ -48,30 +42,25 @@ function forceRectCollide(padding = 1, strength = 0.5) {
 }
 
 // Given theatres already positioned on the canvas, figures out where each
-// theatre's NAME LABEL should sit so labels don't overlap each other -
-// separate from the marker's own position, which never moves.
+// theatre's label should sit so labels don't overlap each other
 export function resolveLabelPositions(theatres, fontSize = 13) {
   const nodes = theatres.map((t) => ({
     id: t.id,
     anchorX: t.x,
-    anchorY: t.y + 18, // same offset the old fixed layout used
+    anchorY: t.y + 18,
     x: t.x,
-    y: t.y + 18, // starting guess
+    y: t.y + 18,
     width: estimateLabelWidth(t.name, fontSize),
     height: fontSize + 4,
   }));
 
   const simulation = forceSimulation(nodes)
-    // Pulls each label back toward its own marker - kept fairly strong so
-    // labels only move as far as they need to to stop overlapping, rather
-    // than drifting away from their marker.
+    // Pulls each label back toward its own marker
     .force("x", forceX((d) => d.anchorX).strength(0.4))
     .force("y", forceY((d) => d.anchorY).strength(0.4))
     .force("collide", forceRectCollide())
     .stop();
 
-  // The map is static once built, so we don't need to animate this - just
-  // run all 300 physics steps at once and grab the final settled result.
   for (let i = 0; i < 300; i++) simulation.tick();
 
   const positions = {};

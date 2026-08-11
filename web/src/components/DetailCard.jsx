@@ -2,16 +2,16 @@ function DetailCard({ theatre, onClose }) {
   return (
     <div
       style={{
-        height: "100%",
         boxSizing: "border-box",
         background: "var(--ink)",
-        borderLeft: "1.5px solid var(--brass)",
+        border: "1.5px solid var(--brass)",
+        borderRadius: "6px",
+        boxShadow: "0 10px 30px rgba(0, 0, 0, 0.35)",
         padding: "24px 20px",
         position: "relative",
         fontFamily: "var(--font-body)",
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
       }}
     >
       <button
@@ -25,11 +25,11 @@ function DetailCard({ theatre, onClose }) {
           border: "none",
           color: "var(--cream)",
           cursor: "pointer",
-          fontSize: "18px",
+          fontSize: "20px",
           lineHeight: 1,
         }}
       >
-        →
+        ×
       </button>
       <p
         style={{

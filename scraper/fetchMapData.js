@@ -9,15 +9,17 @@ import fs from "fs/promises";
 const THEATRES_PATH = new URL("../data/theatres.json", import.meta.url);
 const OUTPUT_PATH = new URL("../data/mapData.json", import.meta.url);
 
-const PADDING_DEGREES = 0.004;
+const PADDING_DEGREES = 0.008;
 
 // Compute a bounding box for map containing all theatres, with padding
+const SOUTH_EXTRA_PADDING = 0.008;
+
 function getPaddedBounds(theatres) {
   const lats = theatres.map((t) => t.lat);
   const lngs = theatres.map((t) => t.lng);
 
   return {
-    minLat: Math.min(...lats) - PADDING_DEGREES,
+    minLat: Math.min(...lats) - PADDING_DEGREES - SOUTH_EXTRA_PADDING,
     maxLat: Math.max(...lats) + PADDING_DEGREES,
     minLng: Math.min(...lngs) - PADDING_DEGREES,
     maxLng: Math.max(...lngs) + PADDING_DEGREES,
@@ -33,13 +35,15 @@ function getPaddedBounds(theatres) {
  */
 async function fetchOverpass(bounds) {
   const query = `
-    [out:json][timeout:25];
+    [out:json][timeout:60];
     (
-      way["highway"~"^(primary|secondary|tertiary|residential|pedestrian|living_street)$"]
+      way["highway"~"^(primary|secondary|tertiary|unclassified|residential|pedestrian|living_street)$"]
         (${bounds.minLat},${bounds.minLng},${bounds.maxLat},${bounds.maxLng});
       way["natural"="water"]
         (${bounds.minLat},${bounds.minLng},${bounds.maxLat},${bounds.maxLng});
       way["waterway"="riverbank"]
+        (${bounds.minLat},${bounds.minLng},${bounds.maxLat},${bounds.maxLng});
+      way["waterway"="river"]
         (${bounds.minLat},${bounds.minLng},${bounds.maxLat},${bounds.maxLng});
       way["leisure"="park"]
         (${bounds.minLat},${bounds.minLng},${bounds.maxLat},${bounds.maxLng});
@@ -56,8 +60,7 @@ async function fetchOverpass(bounds) {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         Accept: "*/*",
-        "User-Agent":
-          "west-end-map-learning-project/1.0 (your-email@example.com)",
+        "User-Agent": "west-end-map-learning-project/1.0",
       },
       body: `data=${encodeURIComponent(query)}`,
     }
@@ -91,6 +94,12 @@ function classify(elements) {
       roads.push({ highway: tags.highway, points });
     } else if (tags.natural === "water" || tags.waterway === "riverbank") {
       water.push({ points });
+    } else if (tags.waterway === "river") {
+      // The Thames itself is mapped as a multipolygon relation, not a
+      // plain way, so it's invisible to the way["natural"="water"] query
+      // above - fall back to its centerline way and draw it as a thick
+      // stroked line instead of a filled shape
+      water.push({ points, isLine: true });
     } else if (
       tags.leisure === "park" ||
       tags.landuse === "grass" ||
