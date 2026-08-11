@@ -2,8 +2,190 @@
   {
     "id": "lyceum",
     "name": "Lyceum Theatre",
-    "address": "21 Wellington St, London WC2E 7RQ",
-    "lat": null,
-    "lng": null
+    "address": "Lyceum Theatre, London",
+    "lat": 51.5114809,
+    "lng": -0.1200585
+  },
+  {
+    "id": "palace",
+    "name": "Palace Theatre",
+    "address": "Palace Theatre, London",
+    "lat": 51.5130545,
+    "lng": -0.1298638
+  },
+  {
+    "id": "apollo",
+    "name": "Apollo Theatre",
+    "address": "Apollo Theatre, Shaftesbury Avenue, London",
+    "lat": 51.5115818,
+    "lng": -0.133467
+  },
+  {
+    "id": "gielgud",
+    "name": "Gielgud Theatre",
+    "address": "Gielgud Theatre, Shaftesbury Avenue, London",
+    "lat": 51.5118742,
+    "lng": -0.1330884
+  },
+  {
+    "id": "lyric",
+    "name": "Lyric Theatre",
+    "address": "Lyric Theatre, Shaftesbury Avenue, London",
+    "lat": 51.5113219,
+    "lng": -0.1336986
+  },
+  {
+    "id": "sondheim",
+    "name": "Sondheim Theatre",
+    "address": "Sondheim Theatre, Shaftesbury Avenue, London",
+    "lat": 51.5120287,
+    "lng": -0.1328534
+  },
+  {
+    "id": "shaftesbury",
+    "name": "Shaftesbury Theatre",
+    "address": "Shaftesbury Theatre, London",
+    "lat": 51.5161372,
+    "lng": -0.1258584
+  },
+  {
+    "id": "phoenix",
+    "name": "Phoenix Theatre",
+    "address": "Phoenix Theatre, Charing Cross Road, London",
+    "lat": 51.5145139,
+    "lng": -0.1293782
+  },
+  {
+    "id": "garrick",
+    "name": "Garrick Theatre",
+    "address": "Garrick Theatre, Charing Cross Road, London",
+    "lat": 51.5099933,
+    "lng": -0.1278259
+  },
+  {
+    "id": "wyndhams",
+    "name": "Wyndham's Theatre",
+    "address": "St Martin's Court, London WC2",
+    "lat": 51.5112426,
+    "lng": -0.127918
+  },
+  {
+    "id": "noel-coward",
+    "name": "Noël Coward Theatre",
+    "address": "Noël Coward Theatre, St Martin's Lane, London",
+    "lat": 51.5111212,
+    "lng": -0.1274584
+  },
+  {
+    "id": "duke-of-york",
+    "name": "Duke of York's Theatre",
+    "address": "St Martin's Lane, London WC2",
+    "lat": 51.5101244,
+    "lng": -0.1269178
+  },
+  {
+    "id": "ambassadors",
+    "name": "Ambassadors Theatre",
+    "address": "Ambassadors Theatre, West Street, London",
+    "lat": 51.5130407,
+    "lng": -0.127836
+  },
+  {
+    "id": "st-martins",
+    "name": "St Martin's Theatre",
+    "address": "St Martin's Theatre, West Street, London",
+    "lat": 51.5128983,
+    "lng": -0.1276037
+  },
+  {
+    "id": "savoy",
+    "name": "Savoy Theatre",
+    "address": "Savoy Theatre, Strand, London",
+    "lat": 51.51015,
+    "lng": -0.12087
+  },
+  {
+    "id": "adelphi",
+    "name": "Adelphi Theatre",
+    "address": "Adelphi Theatre, Strand, London",
+    "lat": 51.5102364,
+    "lng": -0.1230784
+  },
+  {
+    "id": "vaudeville",
+    "name": "Vaudeville Theatre",
+    "address": "Vaudeville Theatre, Strand, London",
+    "lat": 51.5105309,
+    "lng": -0.1225862
+  },
+  {
+    "id": "duchess",
+    "name": "Duchess Theatre",
+    "address": "Catherine Street, London WC2",
+    "lat": 51.5122768,
+    "lng": -0.1195544
+  },
+  {
+    "id": "aldwych",
+    "name": "Aldwych Theatre",
+    "address": "Aldwych, London WC2",
+    "lat": 51.5117881,
+    "lng": -0.1189868
+  },
+  {
+    "id": "drury-lane",
+    "name": "Theatre Royal Drury Lane",
+    "address": "Catherine Street, London WC2",
+    "lat": 51.5122768,
+    "lng": -0.1195544
+  },
+  {
+    "id": "gillian-lynne",
+    "name": "Gillian Lynne Theatre",
+    "address": "166 Drury Lane, London WC2B 5PW",
+    "lat": 51.5146476,
+    "lng": -0.1221031
+  },
+  {
+    "id": "prince-of-wales",
+    "name": "Prince of Wales Theatre",
+    "address": "Coventry Street, London W1",
+    "lat": 51.5102665,
+    "lng": -0.1324231
+  },
+  {
+    "id": "criterion",
+    "name": "Criterion Theatre",
+    "address": "Criterion Theatre, Piccadilly Circus, London",
+    "lat": 51.5095757,
+    "lng": -0.13398
+  },
+  {
+    "id": "her-majestys",
+    "name": "His Majesty's Theatre",
+    "address": "Haymarket, London SW1",
+    "lat": 51.5099345,
+    "lng": -0.1331125
+  },
+  {
+    "id": "victoria-palace",
+    "name": "Victoria Palace Theatre",
+    "address": "Victoria Street, London SW1",
+    "lat": 51.4972293,
+    "lng": -0.1373869
+  },
+  {
+    "id": "dominion",
+    "name": "Dominion Theatre",
+    "address": "Tottenham Court Road, London W1",
+    "lat": 51.5160063,
+    "lng": -0.1303793
+  },
+  {
+    "id": "london-palladium",
+    "name": "London Palladium",
+    "address": "Argyll Street, London W1",
+    "lat": 51.5150021,
+    "lng": -0.1410711
   }
 ]

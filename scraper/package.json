@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "geocode": "node geocode.js"
   },
   "keywords": [],
   "author": "",
@@ -12,6 +13,7 @@
   "description": "",
   "dependencies": {
     "axios": "^1.19.0",
-    "cheerio": "^1.2.0"
+    "cheerio": "^1.2.0",
+    "dotenv": "^17.4.2"
   }
 }
