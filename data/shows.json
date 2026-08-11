@@ -1,0 +1,12 @@
+[
+  {
+    "theatreId": "lyceum",
+    "showName": "The Lion King",
+    "schedule": {
+      "darkDay": "Monday",
+      "eveningTime": "19:30",
+      "matineeDays": ["Wednesday", "Saturday"],
+      "matineeTime": "14:30"
+    }
+  }
+]
