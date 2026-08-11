@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "geocode": "node geocode.js"
+    "geocode": "node geocode.js",
+    "add-titles": "node addWikipediaTitles.js",
+    "scrape": "node scrapeShows.js"
   },
   "keywords": [],
   "author": "",
