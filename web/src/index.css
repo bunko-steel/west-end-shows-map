@@ -8,10 +8,13 @@
   --accent-bg: rgba(170, 59, 255, 0.1);
   --accent-border: rgba(170, 59, 255, 0.5);
   --social-bg: rgba(244, 243, 236, 0.5);
-  --ink: #14110f;
-  --gold: #c9a227;
-  --cream: #ede3cc;
+  --parchment: #f2ebda;
+  --ink: #1b1712;
+  --brass: #a8752c;
+  --water: #9fc1c6;
+  --park: #9cb68c;
   --curtain-red: #8c1d2b;
+  --cream: #ede3cc;
   --font-display: "Cinzel Decorative", serif;
   --font-body: "Cormorant Garamond", serif;
 
@@ -59,7 +62,7 @@
 
 body {
   margin: 0;
-  background: var(--ink);
+  background: var(--parchment);
 }
 
 #root {

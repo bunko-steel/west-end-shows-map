@@ -4,8 +4,8 @@ function DetailCard({ theatre, onClose }) {
       style={{
         height: "100%",
         boxSizing: "border-box",
-        background: "var(--cream)",
-        borderLeft: "1.5px solid var(--gold)",
+        background: "var(--ink)",
+        borderLeft: "1.5px solid var(--brass)",
         padding: "24px 20px",
         position: "relative",
         fontFamily: "var(--font-body)",
@@ -23,7 +23,7 @@ function DetailCard({ theatre, onClose }) {
           right: "14px",
           background: "none",
           border: "none",
-          color: "var(--ink)",
+          color: "var(--cream)",
           cursor: "pointer",
           fontSize: "18px",
           lineHeight: 1,
@@ -37,7 +37,7 @@ function DetailCard({ theatre, onClose }) {
           fontWeight: 600,
           fontSize: "12px",
           letterSpacing: "2px",
-          color: "var(--curtain-red)",
+          color: "var(--brass)",
         }}
       >
         {theatre.showName ? "NOW PLAYING" : "CHECK LISTINGS"}
@@ -47,7 +47,7 @@ function DetailCard({ theatre, onClose }) {
           margin: "8px 0",
           fontFamily: "var(--font-display)",
           fontSize: "22px",
-          color: "var(--ink)",
+          color: "var(--cream)",
         }}
       >
         {theatre.name}
@@ -57,7 +57,7 @@ function DetailCard({ theatre, onClose }) {
           margin: 0,
           fontStyle: "italic",
           fontSize: "15px",
-          color: "var(--ink)",
+          color: "var(--cream)",
         }}
       >
         {theatre.showName ||

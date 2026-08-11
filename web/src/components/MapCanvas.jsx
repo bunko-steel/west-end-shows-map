@@ -11,14 +11,15 @@ import {
 } from "../utils/project";
 import TheatreMarker from "./TheatreMarker";
 import DetailCard from "./DetailCard";
-import streetsData from "../../../data/streets.json";
+import mapData from "../../../data/mapData.json";
+import { resolveLabelPositions } from "../utils/labelLayout";
 
 const PANEL_WIDTH = 320;
 
 function MapCanvas() {
   // Initial setup
   const theatres = getTheatresWithShows();
-  const bounds = streetsData.bounds;
+  const bounds = mapData.bounds;
   const { width, height } = getCanvasDimensions(bounds);
   const canvas = { width, height, marginX: 60, marginY: 110 };
 
@@ -27,6 +28,7 @@ function MapCanvas() {
     ...theatre,
     ...projectToCanvas(theatre, bounds, canvas),
   }));
+  const labelPositions = resolveLabelPositions(positioned, 13);
 
   const [selectedId, setSelectedId] = useState(null);
 
@@ -74,28 +76,46 @@ function MapCanvas() {
             y="0"
             width={width}
             height={height}
-            style={{ fill: "var(--ink)" }}
+            style={{ fill: "var(--parchment)" }}
           />
           <rect
             x="20"
             y="20"
             width={width - 40}
             height={height - 40}
-            style={{ fill: "none", stroke: "var(--gold)" }}
+            style={{ fill: "none", stroke: "var(--ink)" }}
             strokeWidth="1.5"
           />
+
+          {mapData.parks.map((park, i) => (
+            <path
+              key={`park-${i}`}
+              d={pointsToPath(park.points, bounds, canvas, true)}
+              style={{ fill: "var(--park)" }}
+              opacity="0.5"
+            />
+          ))}
+
+          {mapData.water.map((body, i) => (
+            <path
+              key={`water-${i}`}
+              d={pointsToPath(body.points, bounds, canvas, true)}
+              style={{ fill: "var(--water)" }}
+              opacity="0.6"
+            />
+          ))}
           <text
             x={width / 2}
             y="70"
             textAnchor="middle"
-            style={{ fontFamily: "var(--font-display)", fill: "var(--gold)" }}
+            style={{ fontFamily: "var(--font-display)", fill: "var(--ink)" }}
             fontSize="30"
             letterSpacing="3"
           >
-            WEST END FAMALAM
+            WEST END LIFE
           </text>
 
-          {streetsData.ways.map((way, i) => {
+          {mapData.roads.map((way, i) => {
             const isMainRoad =
               way.highway === "primary" || way.highway === "secondary";
             return (
@@ -103,9 +123,9 @@ function MapCanvas() {
                 key={i}
                 d={pointsToPath(way.points, bounds, canvas)}
                 fill="none"
-                style={{ stroke: "var(--gold)" }}
+                style={{ stroke: "var(--brass)" }}
                 strokeWidth={isMainRoad ? 1 : 0.5}
-                opacity={isMainRoad ? 0.6 : 0.3}
+                opacity={isMainRoad ? 0.7 : 0.4}
               />
             );
           })}
@@ -114,6 +134,7 @@ function MapCanvas() {
             <TheatreMarker
               key={theatre.id}
               theatre={theatre}
+              labelPos={labelPositions[theatre.id]}
               isSelected={theatre.id === selectedId}
               onSelect={handleMarkerSelect(theatre.id)}
             />

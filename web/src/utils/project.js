@@ -30,13 +30,14 @@ export function projectToCanvas(theatre, bounds, canvas) {
 }
 
 // Converts an array of [lat, lng] points into an SVG path "d" string
-export function pointsToPath(points, bounds, canvas) {
-  return points
+export function pointsToPath(points, bounds, canvas, close = false) {
+  const path = points
     .map(([lat, lng], i) => {
       const { x, y } = projectPoint(lat, lng, bounds, canvas);
       return `${i === 0 ? "M" : "L"} ${x.toFixed(1)} ${y.toFixed(1)}`;
     })
     .join(" ");
+  return close ? `${path} Z` : path;
 }
 
 // Function to figure out the right canvas aspect ratio from the real coordinates

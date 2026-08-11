@@ -8,7 +8,7 @@
     "geocode": "node geocode.js",
     "add-titles": "node addWikipediaTitles.js",
     "scrape": "node scrapeShows.js",
-    "fetch-streets": "node fetchStreets.js"
+    "fetch-map-data": "node fetchMapData.js"
   },
   "keywords": [],
   "author": "",
