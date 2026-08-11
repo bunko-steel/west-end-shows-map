@@ -2,12 +2,16 @@ function DetailCard({ theatre, onClose }) {
   return (
     <div
       style={{
-        marginTop: "16px",
+        height: "100%",
+        boxSizing: "border-box",
         background: "var(--cream)",
-        border: "1.5px solid var(--gold)",
-        padding: "16px 20px",
+        borderLeft: "1.5px solid var(--gold)",
+        padding: "24px 20px",
         position: "relative",
         fontFamily: "var(--font-body)",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
       }}
     >
       <button
@@ -15,16 +19,17 @@ function DetailCard({ theatre, onClose }) {
         aria-label="Close"
         style={{
           position: "absolute",
-          top: "8px",
-          right: "12px",
+          top: "12px",
+          right: "14px",
           background: "none",
           border: "none",
           color: "var(--ink)",
           cursor: "pointer",
-          fontSize: "14px",
+          fontSize: "18px",
+          lineHeight: 1,
         }}
       >
-        ✕
+        →
       </button>
       <p
         style={{
@@ -39,9 +44,9 @@ function DetailCard({ theatre, onClose }) {
       </p>
       <h3
         style={{
-          margin: "4px 0",
+          margin: "8px 0",
           fontFamily: "var(--font-display)",
-          fontSize: "20px",
+          fontSize: "22px",
           color: "var(--ink)",
         }}
       >
