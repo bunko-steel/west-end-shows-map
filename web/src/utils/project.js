@@ -13,18 +13,29 @@ export function getBounds(theatres) {
   };
 }
 
-export function projectToCanvas(theatre, bounds, canvas) {
-  const xRatio =
-    (theatre.lng - bounds.minLng) / (bounds.maxLng - bounds.minLng);
-  // lat increases going north, but screen y increases going down —
-  // so this axis has to be flipped, or the map renders upside down.
-  const yRatio =
-    (theatre.lat - bounds.maxLat) / (bounds.minLat - bounds.maxLat);
+export function projectPoint(lat, lng, bounds, canvas) {
+  const xRatio = (lng - bounds.minLng) / (bounds.maxLng - bounds.minLng);
+  const yRatio = (lat - bounds.maxLat) / (bounds.minLat - bounds.maxLat);
 
   return {
     x: canvas.marginX + xRatio * (canvas.width - canvas.marginX * 2),
     y: canvas.marginY + yRatio * (canvas.height - canvas.marginY * 2),
   };
+}
+
+// Theatres are just a single-point special case of the same projection.
+export function projectToCanvas(theatre, bounds, canvas) {
+  return projectPoint(theatre.lat, theatre.lng, bounds, canvas);
+}
+
+// Converts an array of [lat, lng] points into an SVG path "d" string.
+export function pointsToPath(points, bounds, canvas) {
+  return points
+    .map(([lat, lng], i) => {
+      const { x, y } = projectPoint(lat, lng, bounds, canvas);
+      return `${i === 0 ? "M" : "L"} ${x.toFixed(1)} ${y.toFixed(1)}`;
+    })
+    .join(" ");
 }
 
 // Figures out the right canvas aspect ratio from the real coordinates,

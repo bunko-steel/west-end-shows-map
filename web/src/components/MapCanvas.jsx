@@ -1,16 +1,17 @@
 import { useState } from "react";
 import { getTheatresWithShows } from "../data";
 import {
-  getBounds,
   getCanvasDimensions,
   projectToCanvas,
+  pointsToPath,
 } from "../utils/project";
 import TheatreMarker from "./TheatreMarker";
 import DetailCard from "./DetailCard";
+import streetsData from "../../../data/streets.json";
 
 function MapCanvas() {
   const theatres = getTheatresWithShows();
-  const bounds = getBounds(theatres);
+  const bounds = streetsData.bounds;
   const { width, height } = getCanvasDimensions(bounds);
   const canvas = { width, height, marginX: 60, marginY: 110 };
 
@@ -54,6 +55,21 @@ function MapCanvas() {
         >
           WEST END TONIGHT
         </text>
+
+        {streetsData.ways.map((way, i) => {
+          const isMainRoad =
+            way.highway === "primary" || way.highway === "secondary";
+          return (
+            <path
+              key={i}
+              d={pointsToPath(way.points, bounds, canvas)}
+              fill="none"
+              style={{ stroke: "var(--gold)" }}
+              strokeWidth={isMainRoad ? 1 : 0.5}
+              opacity={isMainRoad ? 0.6 : 0.3}
+            />
+          );
+        })}
 
         {positioned.map((theatre) => (
           <TheatreMarker
