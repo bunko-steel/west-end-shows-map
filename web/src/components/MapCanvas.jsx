@@ -37,10 +37,6 @@ function MapCanvas() {
   const viewport = useWindowSize();
   const theatres = getTheatresWithShows();
 
-  // WORLD SPACE: a fixed projection built once from the theatre cluster's
-  // own tight bounds. This never changes after load - it does not care
-  // about window size at all. Panning and zooming just move a camera over
-  // this fixed world, instead of ever recalculating geography again.
   const worldBounds = getBounds(theatres);
   const worldCanvas = {
     ...getCanvasDimensions(worldBounds, 1400),
@@ -56,29 +52,14 @@ function MapCanvas() {
 
   const [transform, setTransform] = useState(zoomIdentity);
 
-  // Sets up d3-zoom exactly once. D3 owns the drag/wheel physics and
-  // clamping; we just store whatever transform it computes as normal React
-  // state, which re-renders the <g> below whenever it changes.
   useEffect(() => {
     const svgEl = select(svgRef.current);
 
-    // "Contain" fit - shows the whole theatre cluster with nothing
-    // cropped, matching the zoom level that looked right before.
     const fitScale = Math.min(
       viewport.width / worldCanvas.width,
       viewport.height / worldCanvas.height
     );
-    const initialTransform = zoomIdentity
-      .translate(
-        (viewport.width - worldCanvas.width * fitScale) / 2,
-        (viewport.height - worldCanvas.height * fitScale) / 2
-      )
-      .scale(fitScale);
 
-    // Pan is only allowed within the area we actually fetched data for -
-    // project mapData's own (larger, padded) bounds into this same world
-    // space, and that becomes the hard edge of where you can pan to. This
-    // is the actual mechanism that stops blank space from being reachable.
     const topLeft = projectPoint(
       mapData.bounds.maxLat,
       mapData.bounds.minLng,
@@ -91,9 +72,26 @@ function MapCanvas() {
       worldBounds,
       worldCanvas
     );
+    const dataWidth = bottomRight.x - topLeft.x;
+    const dataHeight = bottomRight.y - topLeft.y;
+
+    // Recalculated every time viewport changes below, so this always
+    // reflects the window's CURRENT size, not its size when the component
+    // first mounted.
+    const minCoverScale = Math.max(
+      viewport.width / dataWidth,
+      viewport.height / dataHeight
+    );
+
+    const initialTransform = zoomIdentity
+      .translate(
+        (viewport.width - worldCanvas.width * fitScale) / 2,
+        (viewport.height - worldCanvas.height * fitScale) / 2
+      )
+      .scale(fitScale);
 
     const zoomBehavior = d3Zoom()
-      .scaleExtent([fitScale * 0.6, fitScale * 3.5])
+      .scaleExtent([minCoverScale, fitScale * 3.5])
       .translateExtent([
         [topLeft.x, topLeft.y],
         [bottomRight.x, bottomRight.y],
@@ -101,15 +99,13 @@ function MapCanvas() {
       .on("zoom", (event) => setTransform(event.transform));
 
     svgEl.call(zoomBehavior);
-    // Syncs D3's own internal state to our computed starting view. Skipping
-    // this is a common bug: the map looks right on load, but the very
-    // first drag or scroll jumps unexpectedly, because D3 assumed it was
-    // starting from zero rather than from this fitted position.
     svgEl.call(zoomBehavior.transform, initialTransform);
 
     return () => svgEl.on(".zoom", null);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // deliberate one-time setup, not re-run on resize
+    // Re-runs whenever the window is resized, so the zoom-out limit is
+    // always computed against the CURRENT viewport, not a stale one from
+    // whenever the component first mounted.
+  }, [viewport.width, viewport.height]);
 
   const [selectedId, setSelectedId] = useState(null);
   const [lastSelectedId, setLastSelectedId] = useState(null);
@@ -154,9 +150,6 @@ function MapCanvas() {
           style={{ fill: "var(--parchment)" }}
         />
 
-        {/* Everything geographic lives in this one group - the pan/zoom
-            transform applies here only, so the parchment background and
-            the title/frame chrome (outside the svg entirely) never move */}
         <g
           transform={`translate(${transform.x},${transform.y}) scale(${transform.k})`}
         >
@@ -230,18 +223,18 @@ function MapCanvas() {
         style={{
           position: "absolute",
           top: "36px",
-          left: "50%",
-          transform: "translateX(-50%)",
+          left: "44px",
           margin: 0,
           fontFamily: "var(--font-display)",
           color: "var(--ink)",
-          fontSize: "30px",
-          letterSpacing: "3px",
+          fontSize: "clamp(30px, 2.4vw, 30px)",
+          letterSpacing: "0.12em",
           fontWeight: "normal",
+          whiteSpace: "nowrap",
           pointerEvents: "none",
         }}
       >
-        WEST END LIFE
+        THE WEST END GOES ON!
       </h1>
 
       <div

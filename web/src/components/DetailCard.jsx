@@ -2,16 +2,16 @@ function DetailCard({ theatre, onClose }) {
   return (
     <div
       style={{
+        height: "100%",
         boxSizing: "border-box",
         background: "var(--ink)",
-        border: "1.5px solid var(--brass)",
-        borderRadius: "6px",
-        boxShadow: "0 10px 30px rgba(0, 0, 0, 0.35)",
+        borderLeft: "1.5px solid var(--brass)",
         padding: "24px 20px",
         position: "relative",
         fontFamily: "var(--font-body)",
         display: "flex",
         flexDirection: "column",
+        justifyContent: "center",
       }}
     >
       <button
@@ -25,12 +25,22 @@ function DetailCard({ theatre, onClose }) {
           border: "none",
           color: "var(--cream)",
           cursor: "pointer",
-          fontSize: "20px",
+          fontSize: "18px",
           lineHeight: 1,
         }}
       >
-        ×
+        →
       </button>
+      <h3
+        style={{
+          margin: "0 0 8px",
+          fontFamily: "var(--font-display)",
+          fontSize: "24px",
+          color: "var(--cream)",
+        }}
+      >
+        {theatre.name}
+      </h3>
       <p
         style={{
           margin: 0,
@@ -42,19 +52,9 @@ function DetailCard({ theatre, onClose }) {
       >
         {theatre.showName ? "NOW PLAYING" : "CHECK LISTINGS"}
       </p>
-      <h3
-        style={{
-          margin: "8px 0",
-          fontFamily: "var(--font-display)",
-          fontSize: "22px",
-          color: "var(--cream)",
-        }}
-      >
-        {theatre.name}
-      </h3>
       <p
         style={{
-          margin: 0,
+          margin: "8px 0 0",
           fontStyle: "italic",
           fontSize: "15px",
           color: "var(--cream)",
