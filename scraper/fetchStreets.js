@@ -1,3 +1,8 @@
+/**
+ * Fetches street/road geometry from OpenStreetMap so the frontend can render
+ * streets around the theatres
+ */
+
 import fs from "fs/promises";
 
 const THEATRES_PATH = new URL("../data/theatres.json", import.meta.url);
@@ -5,6 +10,7 @@ const STREETS_PATH = new URL("../data/streets.json", import.meta.url);
 
 const PADDING_DEGREES = 0.003;
 
+// Compute a bounding box for map containing all theatres, with padding
 function getPaddedBounds(theatres) {
   const lats = theatres.map((t) => t.lat);
   const lngs = theatres.map((t) => t.lng);
@@ -17,6 +23,12 @@ function getPaddedBounds(theatres) {
   };
 }
 
+/**
+ * Queries the Overpass API for streets within that bounding box
+ *  - Build an overpass QL query string
+ *  - POSTs that query
+ *  - Returns the parses JSON response
+ */
 async function fetchStreets(bounds) {
   const query = `
     [out:json][timeout:25];
@@ -49,6 +61,13 @@ async function fetchStreets(bounds) {
   return response.json();
 }
 
+/**
+ * Reads and parses theatres.json
+ * Computes the bounding box
+ * Call fetchStreets(bounds) to get raw Overpass data
+ * Process this data
+ * Write this to streets.json
+ */
 async function main() {
   const theatresRaw = await fs.readFile(THEATRES_PATH, "utf-8");
   const theatres = JSON.parse(theatresRaw);

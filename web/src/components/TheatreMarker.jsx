@@ -1,3 +1,7 @@
+/**
+ * Draws a theatre's marker on SVG map, with a label
+ */
+
 function TheatreMarker({ theatre, isSelected, onSelect }) {
   const radius = isSelected ? 7 : 5;
 

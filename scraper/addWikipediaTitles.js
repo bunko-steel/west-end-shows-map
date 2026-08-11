@@ -1,11 +1,14 @@
+// Fills theatres.json with associated Wikipedia article titles
+/**
+ * SOME OF THE TITLES NEED UPDATING
+ */
+
+// Module for async file reading/writing
 import fs from "fs/promises";
 
 const THEATRES_PATH = new URL("../data/theatres.json", import.meta.url);
 
-// My best guess at each theatre's exact Wikipedia article title.
-// Some of these WILL be wrong — Wikipedia's actual titles are quirky
-// (disambiguation suffixes, punctuation). The next script will tell us
-// exactly which ones fail, and we fix them here, one line at a time.
+// Claude's best guess at each theatre's exact Wikipedia article title.
 const wikipediaTitles = {
   lyceum: "Lyceum Theatre, London",
   palace: "Palace Theatre, London",
@@ -36,6 +39,12 @@ const wikipediaTitles = {
   "london-palladium": "London Palladium",
 };
 
+// Seeing if Wikipedia article matches with the name we provide for the theatre
+/**
+ * Reads and parses theatres.json into an array of theatre objects
+ * Loops through each theatre, looks up its id in wikipediaTitles
+ * Writes entire theatres array back into same file, adding the wikipedia tiles page
+ */
 async function main() {
   const raw = await fs.readFile(THEATRES_PATH, "utf-8");
   const theatres = JSON.parse(raw);
@@ -51,8 +60,7 @@ async function main() {
     }
   }
 
-  // This only ADDS a field — lat/lng and everything else you already
-  // have stays exactly as it was.
+  // Adds wikipedia title field
   await fs.writeFile(THEATRES_PATH, JSON.stringify(theatres, null, 2));
   console.log(
     `Added Wikipedia titles to ${matched}/${theatres.length} theatres.`

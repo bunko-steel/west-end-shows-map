@@ -1,3 +1,7 @@
+/**
+ * Rendering the actual map as an SVG
+ */
+
 import { useState } from "react";
 import { getTheatresWithShows } from "../data";
 import {
@@ -10,11 +14,13 @@ import DetailCard from "./DetailCard";
 import streetsData from "../../../data/streets.json";
 
 function MapCanvas() {
+  // Initial setup
   const theatres = getTheatresWithShows();
   const bounds = streetsData.bounds;
   const { width, height } = getCanvasDimensions(bounds);
   const canvas = { width, height, marginX: 60, marginY: 110 };
 
+  // Maps over every theatre, converting long/lat into x/y pixel coords on SVG canvas
   const positioned = theatres.map((theatre) => ({
     ...theatre,
     ...projectToCanvas(theatre, bounds, canvas),
@@ -23,6 +29,7 @@ function MapCanvas() {
   const [selectedId, setSelectedId] = useState(null);
   const selected = positioned.find((t) => t.id === selectedId) || null;
 
+  // The render - edit here for styling
   return (
     <div style={{ maxWidth: `${width}px`, margin: "0 auto" }}>
       <svg
@@ -53,7 +60,7 @@ function MapCanvas() {
           fontSize="30"
           letterSpacing="3"
         >
-          WEST END TONIGHT
+          WEST END FAMALAM
         </text>
 
         {streetsData.ways.map((way, i) => {

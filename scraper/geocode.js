@@ -1,3 +1,12 @@
+/**
+ * Take each theatre's street address and looks up longtitude/latitude via
+ * LocationIQ geocoding API, writing coordinates back to theatres/json
+ *
+ * Geocoding step: convert street addresses into lat/long coords so theatres
+ * can be plotted on a map
+ */
+
+// Loads environment from a .env file
 import "dotenv/config";
 import fs from "fs/promises";
 
@@ -5,13 +14,21 @@ const THEATRES_PATH = new URL("../data/theatres.json", import.meta.url);
 const API_KEY = process.env.LOCATIONIQ_API_KEY;
 
 if (!API_KEY) {
-  throw new Error("Missing LOCATIONIQ_API_KEY — check your scraper/.env file");
+  throw new Error("Missing LOCATIONIQ_API_KEY: check your .env file");
 }
 
+// Promise-based delay helper to pace requests
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+/**
+ * Builds a LocationIQ search URL, URL-encoding the address, requesting JSON format and limit=1 (the best match)
+ * Fetches it.
+ * Parses the JSON. LocationIQ returns an array of matches
+ * If array empty (no match found), returns null
+ * Otherwise, returns {lat, long}
+ */
 async function geocode(address) {
   const url = `https://us1.locationiq.com/v1/search.php?key=${API_KEY}&q=${encodeURIComponent(
     address
@@ -20,8 +37,6 @@ async function geocode(address) {
   const response = await fetch(url);
 
   if (!response.ok) {
-    // Read the actual error body instead of just the status code —
-    // APIs almost always explain the failure in the response text.
     const body = await response.text();
     throw new Error(
       `LocationIQ returned ${response.status} for "${address}": ${body}`
@@ -40,6 +55,13 @@ async function geocode(address) {
   };
 }
 
+/**
+ * Reads and parses theatres.json
+ * Loops through each theatre:
+ *  - Logs which theatre is being geocoded
+ *  - Calls geocode(theatre.address)
+ * Write the whole updated theatres array back to theatres.json
+ */
 async function main() {
   const raw = await fs.readFile(THEATRES_PATH, "utf-8");
   const theatres = JSON.parse(raw);
@@ -55,7 +77,7 @@ async function main() {
         theatre.lng = coords.lng;
       } else {
         console.warn(
-          `No match found for ${theatre.name} — leaving lat/lng as null`
+          `No match found for ${theatre.name} - leaving lat/lng as null`
         );
       }
     } catch (err) {
@@ -65,7 +87,7 @@ async function main() {
       }
     }
 
-    await sleep(600); // free plan allows 2 req/sec — 600ms keeps us safely under that
+    await sleep(600);
   }
 
   await fs.writeFile(THEATRES_PATH, JSON.stringify(theatres, null, 2));
