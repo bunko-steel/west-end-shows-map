@@ -89,7 +89,11 @@ function classify(elements) {
     const points = el.geometry.map((pt) => [pt.lat, pt.lon]);
 
     if (tags.highway) {
-      roads.push({ highway: tags.highway, points });
+      roads.push({
+        highway: tags.highway,
+        isRoundabout: tags.junction === "roundabout",
+        points,
+      });
     } else if (tags.natural === "water" || tags.waterway === "riverbank") {
       water.push({ points });
     } else if (tags.waterway === "river") {

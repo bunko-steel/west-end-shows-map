@@ -2,7 +2,7 @@
  * Rendering the actual map as an SVG, with pan and zoom
  */
 
-import { useState, useEffect, useLayoutEffect, useRef } from "react";
+import { useState, useEffect, useLayoutEffect, useRef, useMemo } from "react";
 import { select } from "d3-selection";
 import { zoom as d3Zoom, zoomIdentity } from "d3-zoom";
 import { getTheatresWithShows } from "../data";
@@ -70,21 +70,24 @@ function useWindowSize() {
 function MapCanvas() {
   const svgRef = useRef(null);
   const viewport = useWindowSize();
-  const theatres = getTheatresWithShows();
 
-  const worldBounds = getBounds(theatres);
-  const worldCanvas = {
-    ...getCanvasDimensions(worldBounds, 1400),
-    marginX: 40,
-    marginY: 40,
-  };
-
-  const positioned = theatres.map((theatre) => ({
-    ...theatre,
-    ...projectToCanvas(theatre, worldBounds, worldCanvas),
-  }));
-  const labelPositions = resolveLabelPositions(positioned, 13);
-
+  // Get label positions just once at the start, not recalculating at every re-render
+  const { worldBounds, worldCanvas, positioned, labelPositions } =
+    useMemo(() => {
+      const theatres = getTheatresWithShows();
+      const worldBounds = getBounds(theatres);
+      const worldCanvas = {
+        ...getCanvasDimensions(worldBounds, 1400),
+        marginX: 40,
+        marginY: 40,
+      };
+      const positioned = theatres.map((theatre) => ({
+        ...theatre,
+        ...projectToCanvas(theatre, worldBounds, worldCanvas),
+      }));
+      const labelPositions = resolveLabelPositions(positioned, 13);
+      return { worldBounds, worldCanvas, positioned, labelPositions };
+    }, []);
   const [transform, setTransform] = useState(zoomIdentity);
 
   const TITLE_TEXT = "THE WEST END";
@@ -222,14 +225,22 @@ function MapCanvas() {
           {mapData.roads.map((way, i) => {
             const isMainRoad =
               way.highway === "primary" || way.highway === "secondary";
+
             return (
               <path
                 key={i}
-                d={pointsToPath(way.points, worldBounds, worldCanvas)}
-                fill="none"
-                style={{ stroke: "var(--brass)" }}
+                d={pointsToPath(
+                  way.points,
+                  worldBounds,
+                  worldCanvas,
+                  way.isRoundabout
+                )}
+                style={{
+                  stroke: "var(--brass)",
+                  fill: way.isRoundabout ? "var(--brass)" : "none",
+                }}
                 strokeWidth={isMainRoad ? 1 : 0.5}
-                opacity={isMainRoad ? 0.7 : 0.4}
+                opacity={way.isRoundabout ? 0.3 : isMainRoad ? 0.7 : 0.4}
               />
             );
           })}
