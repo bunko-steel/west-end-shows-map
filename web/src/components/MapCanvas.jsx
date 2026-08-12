@@ -2,7 +2,7 @@
  * Rendering the actual map as an SVG, with pan and zoom
  */
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { select } from "d3-selection";
 import { zoom as d3Zoom, zoomIdentity } from "d3-zoom";
 import { getTheatresWithShows } from "../data";
@@ -17,6 +17,44 @@ import TheatreMarker from "./TheatreMarker";
 import DetailCard from "./DetailCard";
 import mapData from "../../../data/mapData.json";
 import { resolveLabelPositions } from "../utils/labelLayout";
+
+// Shrinks an element's font-size until its rendered text actually fits
+// its available width - more reliable than a CSS clamp() guess, because
+// this measures the real rendered width in this exact font, at this
+// exact screen size, rather than approximating from viewport percentage.
+function useFitText(ref, text, { min = 13, max = 30, rightGap = 24 } = {}) {
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    function fit() {
+      const parent = el.offsetParent;
+      if (!parent) return;
+
+      const available = parent.clientWidth - el.offsetLeft - rightGap;
+
+      let fontSize = max;
+      el.style.whiteSpace = "nowrap";
+      el.style.fontSize = `${fontSize}px`;
+
+      while (fontSize > min && el.scrollWidth > available) {
+        fontSize -= 0.5;
+        el.style.fontSize = `${fontSize}px`;
+      }
+
+      // If we hit the floor and it STILL doesn't fit (a very narrow
+      // screen, or a much longer title later), fall back to wrapping
+      // instead of letting it silently overflow off-screen.
+      if (el.scrollWidth > available) {
+        el.style.whiteSpace = "normal";
+      }
+    }
+
+    fit();
+    window.addEventListener("resize", fit);
+    return () => window.removeEventListener("resize", fit);
+  }, [ref, text, min, max, rightGap]);
+}
 
 function useWindowSize() {
   const [size, setSize] = useState({
@@ -51,6 +89,10 @@ function MapCanvas() {
   const labelPositions = resolveLabelPositions(positioned, 13);
 
   const [transform, setTransform] = useState(zoomIdentity);
+
+  const TITLE_TEXT = "THE WEST END GOES ON";
+  const titleRef = useRef(null);
+  useFitText(titleRef, TITLE_TEXT, { min: 13, max: 30 });
 
   useEffect(() => {
     const svgEl = select(svgRef.current);
@@ -220,6 +262,7 @@ function MapCanvas() {
         }}
       />
       <h1
+        ref={titleRef}
         style={{
           position: "absolute",
           top: "36px",
@@ -227,14 +270,12 @@ function MapCanvas() {
           margin: 0,
           fontFamily: "var(--font-display)",
           color: "var(--ink)",
-          fontSize: "clamp(30px, 2.4vw, 30px)",
           letterSpacing: "0.12em",
           fontWeight: "normal",
-          whiteSpace: "nowrap",
           pointerEvents: "none",
         }}
       >
-        THE WEST END GOES ON!
+        {TITLE_TEXT}
       </h1>
 
       <div
