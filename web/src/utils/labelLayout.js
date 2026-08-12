@@ -47,9 +47,9 @@ export function resolveLabelPositions(theatres, fontSize = 13) {
   const nodes = theatres.map((t) => ({
     id: t.id,
     anchorX: t.x,
-    anchorY: t.y + 18,
-    x: t.x,
-    y: t.y + 18,
+    anchorY: t.y,
+    x: t.x + (Math.random() - 0.5) * 0.01,
+    y: t.y + 18 + (Math.random() - 0.5) * 0.01,
     width: estimateLabelWidth(t.name, fontSize),
     height: fontSize + 4,
   }));
@@ -65,7 +65,12 @@ export function resolveLabelPositions(theatres, fontSize = 13) {
 
   const positions = {};
   for (const node of nodes) {
-    positions[node.id] = { x: node.x, y: node.y };
+    positions[node.id] = {
+      x: node.x,
+      y: node.y,
+      width: node.width,
+      height: node.height,
+    };
   }
   return positions;
 }

@@ -43,14 +43,6 @@ function TheatreMarker({ theatre, labelPos, isSelected, onSelect }) {
           opacity="0.4"
         />
       )}
-      <rect
-        x={labelPos.x - labelPos.width / 2 - 3}
-        y={labelPos.y - labelPos.height}
-        width={labelPos.width + 6}
-        height={labelPos.height + 4}
-        style={{ fill: "var(--parchment)" }}
-        opacity="0.85"
-      />
       <text
         x={labelPos.x}
         y={labelPos.y}
