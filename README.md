@@ -15,3 +15,12 @@
 * When zoomed out labels are too small - cant really tell where anything is
 
 Link: https://west-end-shows-map-web.vercel.app
+
+
+-------
+
+## Things I've learnt personally (writing here so I don't forget):
+
+How to use an API (and what it is)
+Colour schemes
+Scrapers
