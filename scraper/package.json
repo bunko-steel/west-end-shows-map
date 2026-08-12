@@ -9,7 +9,8 @@
     "add-titles": "node addWikipediaTitles.js",
     "scrape": "node scrapeShows.js",
     "fetch-map-data": "node fetchMapData.js",
-    "verify-coords": "node verifyCoords.js"
+    "verify-coords": "node verifyCoords.js",
+    "discover-theatres": "node discoverTheatres.js"
   },
   "keywords": [],
   "author": "",

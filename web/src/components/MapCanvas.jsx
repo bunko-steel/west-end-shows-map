@@ -18,10 +18,7 @@ import DetailCard from "./DetailCard";
 import mapData from "../../../data/mapData.json";
 import { resolveLabelPositions } from "../utils/labelLayout";
 
-// Shrinks an element's font-size until its rendered text actually fits
-// its available width - more reliable than a CSS clamp() guess, because
-// this measures the real rendered width in this exact font, at this
-// exact screen size, rather than approximating from viewport percentage.
+// Shrinks an element's font-size until its rendered text actually fits its available width
 function useFitText(ref, text, { min = 13, max = 30, rightGap = 24 } = {}) {
   useLayoutEffect(() => {
     const el = ref.current;
@@ -42,16 +39,16 @@ function useFitText(ref, text, { min = 13, max = 30, rightGap = 24 } = {}) {
         el.style.fontSize = `${fontSize}px`;
       }
 
-      // If we hit the floor and it STILL doesn't fit (a very narrow
-      // screen, or a much longer title later), fall back to wrapping
-      // instead of letting it silently overflow off-screen.
-      if (el.scrollWidth > available) {
-        el.style.whiteSpace = "normal";
-      }
+      el.style.whiteSpace = el.scrollWidth > available ? "normal" : "nowrap";
     }
 
     fit();
     window.addEventListener("resize", fit);
+
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(fit);
+    }
+
     return () => window.removeEventListener("resize", fit);
   }, [ref, text, min, max, rightGap]);
 }
@@ -90,7 +87,7 @@ function MapCanvas() {
 
   const [transform, setTransform] = useState(zoomIdentity);
 
-  const TITLE_TEXT = "THE WEST END GOES ON";
+  const TITLE_TEXT = "THE WEST END";
   const titleRef = useRef(null);
   useFitText(titleRef, TITLE_TEXT, { min: 13, max: 30 });
 
@@ -117,9 +114,7 @@ function MapCanvas() {
     const dataWidth = bottomRight.x - topLeft.x;
     const dataHeight = bottomRight.y - topLeft.y;
 
-    // Recalculated every time viewport changes below, so this always
-    // reflects the window's CURRENT size, not its size when the component
-    // first mounted.
+    // Recalculated every time viewport changes, so uses window's current size
     const minCoverScale = Math.max(
       viewport.width / dataWidth,
       viewport.height / dataHeight
@@ -144,9 +139,7 @@ function MapCanvas() {
     svgEl.call(zoomBehavior.transform, initialTransform);
 
     return () => svgEl.on(".zoom", null);
-    // Re-runs whenever the window is resized, so the zoom-out limit is
-    // always computed against the CURRENT viewport, not a stale one from
-    // whenever the component first mounted.
+    // Re-runs whenever the window is resized, so the zoom-out limit is calculated with current viewport
   }, [viewport.width, viewport.height]);
 
   const [selectedId, setSelectedId] = useState(null);

@@ -23,9 +23,7 @@ export function pointsToPath(points, bounds, canvas, close = false) {
   return close ? `${path} Z` : path;
 }
 
-// Tight bounding box around just the theatres - this defines our fixed
-// world space, independent of however much extra map data (roads, river,
-// parks) we've fetched around it.
+// Bounding box around the theatres to figure out how much of world map to display
 export function getBounds(theatres) {
   const lats = theatres.map((t) => t.lat);
   const lngs = theatres.map((t) => t.lng);

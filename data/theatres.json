@@ -214,5 +214,125 @@
     "lat": 51.5146,
     "lng": -0.1405,
     "wikipediaTitle": "London Palladium"
+  },
+  {
+    "id": "apollo-victoria-theatre",
+    "name": "Apollo Victoria Theatre",
+    "address": null,
+    "lat": 51.4956,
+    "lng": -0.1427,
+    "wikipediaTitle": "Apollo Victoria Theatre"
+  },
+  {
+    "id": "arts-theatre",
+    "name": "Arts Theatre",
+    "address": null,
+    "lat": 51.511944,
+    "lng": -0.1275,
+    "wikipediaTitle": "Arts Theatre"
+  },
+  {
+    "id": "cambridge-theatre",
+    "name": "Cambridge Theatre",
+    "address": null,
+    "lat": 51.51364,
+    "lng": -0.12653,
+    "wikipediaTitle": "Cambridge Theatre"
+  },
+  {
+    "id": "fortune-theatre",
+    "name": "Fortune Theatre",
+    "address": null,
+    "lat": 51.513,
+    "lng": -0.121,
+    "wikipediaTitle": "Fortune Theatre"
+  },
+  {
+    "id": "harold-pinter-theatre",
+    "name": "Harold Pinter Theatre",
+    "address": null,
+    "lat": 51.50944444,
+    "lng": -0.13166667,
+    "wikipediaTitle": "Harold Pinter Theatre"
+  },
+  {
+    "id": "london-coliseum",
+    "name": "London Coliseum",
+    "address": null,
+    "lat": 51.509722,
+    "lng": -0.126389,
+    "wikipediaTitle": "London Coliseum"
+  },
+  {
+    "id": "novello-theatre",
+    "name": "Novello Theatre",
+    "address": null,
+    "lat": 51.512306,
+    "lng": -0.11925,
+    "wikipediaTitle": "Novello Theatre"
+  },
+  {
+    "id": "peacock-theatre",
+    "name": "Peacock Theatre",
+    "address": null,
+    "lat": 51.514444,
+    "lng": -0.118056,
+    "wikipediaTitle": "Peacock Theatre"
+  },
+  {
+    "id": "piccadilly-theatre",
+    "name": "Piccadilly Theatre",
+    "address": null,
+    "lat": 51.510611,
+    "lng": -0.134194,
+    "wikipediaTitle": "Piccadilly Theatre"
+  },
+  {
+    "id": "playhouse-theatre",
+    "name": "Playhouse Theatre",
+    "address": null,
+    "lat": 51.506944,
+    "lng": -0.123611,
+    "wikipediaTitle": "Playhouse Theatre"
+  },
+  {
+    "id": "prince-edward-theatre",
+    "name": "Prince Edward Theatre",
+    "address": null,
+    "lat": 51.51361111,
+    "lng": -0.13083333,
+    "wikipediaTitle": "Prince Edward Theatre"
+  },
+  {
+    "id": "royal-opera-house",
+    "name": "Royal Opera House",
+    "address": null,
+    "lat": 51.5131,
+    "lng": -0.1228,
+    "wikipediaTitle": "Royal Opera House"
+  },
+  {
+    "id": "sohoplace",
+    "name": "@sohoplace",
+    "address": null,
+    "lat": 51.51569,
+    "lng": -0.13059,
+    "wikipediaTitle": "@sohoplace"
+  },
+  {
+    "id": "theatre-royal-haymarket",
+    "name": "Theatre Royal Haymarket",
+    "address": null,
+    "lat": 51.5086,
+    "lng": -0.1314,
+    "wikipediaTitle": "Theatre Royal Haymarket"
+  },
+  {
+    "id": "trafalgar-theatre",
+    "name": "Trafalgar Theatre",
+    "address": null,
+    "lat": 51.5066,
+    "lng": -0.1275,
+    "wikipediaTitle": "Trafalgar Theatre"
   }
 ]

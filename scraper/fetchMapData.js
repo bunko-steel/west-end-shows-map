@@ -35,7 +35,7 @@ function getPaddedBounds(theatres) {
  */
 async function fetchOverpass(bounds) {
   const query = `
-    [out:json][timeout:60];
+    [out:json][timeout:120];
     (
       way["highway"~"^(primary|secondary|tertiary|unclassified|residential|pedestrian|living_street)$"]
         (${bounds.minLat},${bounds.minLng},${bounds.maxLat},${bounds.maxLng});
@@ -75,9 +75,7 @@ async function fetchOverpass(bounds) {
 }
 
 /**
- * Sorts the raw Overpass elements into three buckets based on their OSM
- * tags - same source data, split by what it should visually represent
- * (roads get drawn as lines, water/parks get drawn as filled shapes)
+ * Classifying elements into roads, water, parks
  */
 function classify(elements) {
   const roads = [];
@@ -95,10 +93,6 @@ function classify(elements) {
     } else if (tags.natural === "water" || tags.waterway === "riverbank") {
       water.push({ points });
     } else if (tags.waterway === "river") {
-      // The Thames itself is mapped as a multipolygon relation, not a
-      // plain way, so it's invisible to the way["natural"="water"] query
-      // above - fall back to its centerline way and draw it as a thick
-      // stroked line instead of a filled shape
       water.push({ points, isLine: true });
     } else if (
       tags.leisure === "park" ||

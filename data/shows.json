@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-11T06:22:42.706Z",
+  "lastUpdated": "2026-08-12T09:48:50.020Z",
   "shows": [
     {
       "theatreId": "lyceum",
@@ -108,6 +108,62 @@
     {
       "theatreId": "london-palladium",
       "showName": "Jesus Christ Superstar"
+    },
+    {
+      "theatreId": "apollo-victoria-theatre",
+      "showName": "Wicked"
+    },
+    {
+      "theatreId": "arts-theatre",
+      "showName": "Closed in Jan 2026 for a 2 year regeneration. A new temporary venue called 'The Arts at Marble Arch' was opened on the Marble Arch Roundabout"
+    },
+    {
+      "theatreId": "cambridge-theatre",
+      "showName": "Matilda the Musical"
+    },
+    {
+      "theatreId": "fortune-theatre",
+      "showName": "Operation Mincemeat"
+    },
+    {
+      "theatreId": "harold-pinter-theatre",
+      "showName": "Abigail's Party"
+    },
+    {
+      "theatreId": "novello-theatre",
+      "showName": "Mamma Mia!"
+    },
+    {
+      "theatreId": "peacock-theatre",
+      "showName": "Sadler's Wells productions in repertory"
+    },
+    {
+      "theatreId": "piccadilly-theatre",
+      "showName": "Moulin Rouge!"
+    },
+    {
+      "theatreId": "playhouse-theatre",
+      "showName": "Cabaret"
+    },
+    {
+      "theatreId": "prince-edward-theatre",
+      "showName": "Beetlejuice"
+    },
+    {
+      "theatreId": "royal-opera-house",
+      "showName": "Summer interim period"
+    },
+    {
+      "theatreId": "sohoplace",
+      "showName": "Tao of Glass"
+    },
+    {
+      "theatreId": "theatre-royal-haymarket",
+      "showName": "Trainspotting"
+    },
+    {
+      "theatreId": "trafalgar-theatre",
+      "showName": "Oh, Mary!"
     }
   ]
 }

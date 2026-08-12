@@ -43,11 +43,6 @@ function TheatreMarker({ theatre, labelPos, isSelected, onSelect }) {
           opacity="0.4"
         />
       )}
-      {/* Soft backing plate behind the label, instead of a thick text
-          stroke - a stroke halo this size on a cursive italic font makes
-          adjacent letters bleed into each other; a plain rectangle behind
-          the word achieves the same "stays legible over map lines" goal
-          without that side effect */}
       <rect
         x={labelPos.x - labelPos.width / 2 - 3}
         y={labelPos.y - labelPos.height}
