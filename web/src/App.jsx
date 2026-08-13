@@ -1,7 +1,12 @@
 import MapCanvas from "./components/MapCanvas";
+import { ThemeProvider } from "./context/ThemeContext";
 
 function App() {
-  return <MapCanvas />;
+  return (
+    <ThemeProvider>
+      <MapCanvas />
+    </ThemeProvider>
+  );
 }
 
 export default App;

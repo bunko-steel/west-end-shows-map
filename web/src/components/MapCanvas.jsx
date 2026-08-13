@@ -15,8 +15,11 @@ import {
 } from "../utils/project";
 import TheatreMarker from "./TheatreMarker";
 import DetailCard from "./DetailCard";
+import ThemeSwitcher from "./ThemeSwitcher";
 import mapData from "../../../data/mapData.json";
 import { resolveLabelPositions } from "../utils/labelLayout";
+import { themes, defaultThemeId } from "../themes";
+import { useTheme } from "../context/ThemeContext";
 
 // Shrinks an element's font-size until its rendered text actually fits its available width
 function useFitText(ref, text, { min = 13, max = 30, rightGap = 24 } = {}) {
@@ -89,6 +92,9 @@ function MapCanvas() {
       return { worldBounds, worldCanvas, positioned, labelPositions };
     }, []);
   const [transform, setTransform] = useState(zoomIdentity);
+
+  const { themeId } = useTheme();
+  const theme = themes[themeId] ?? themes[defaultThemeId];
 
   const TITLE_TEXT = "THE WEST END";
   const titleRef = useRef(null);
@@ -196,31 +202,19 @@ function MapCanvas() {
               key={`park-${i}`}
               d={pointsToPath(park.points, worldBounds, worldCanvas, true)}
               style={{ fill: "var(--park)" }}
-              opacity="0.5"
+              opacity={theme.opacity.park}
             />
           ))}
 
-          {mapData.water.map((body, i) =>
-            body.isLine ? (
-              <path
-                key={`water-${i}`}
-                d={pointsToPath(body.points, worldBounds, worldCanvas, false)}
-                fill="none"
-                style={{ stroke: "var(--water)" }}
-                strokeWidth="28"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                opacity="0.6"
-              />
-            ) : (
-              <path
-                key={`water-${i}`}
-                d={pointsToPath(body.points, worldBounds, worldCanvas, true)}
-                style={{ fill: "var(--water)" }}
-                opacity="0.6"
-              />
-            )
-          )}
+          {/*Every water feature is represented as a closed polygon, so just fill the shape*/}
+          {mapData.water.map((body, i) => (
+            <path
+              key={`water-${i}`}
+              d={pointsToPath(body.points, worldBounds, worldCanvas, true)}
+              style={{ fill: "var(--water)" }}
+              opacity={theme.opacity.water}
+            />
+          ))}
 
           {mapData.roads.map((way, i) => {
             const isMainRoad =
@@ -240,7 +234,13 @@ function MapCanvas() {
                   fill: way.isRoundabout ? "var(--brass)" : "none",
                 }}
                 strokeWidth={isMainRoad ? 1 : 0.5}
-                opacity={way.isRoundabout ? 0.3 : isMainRoad ? 0.7 : 0.4}
+                opacity={
+                  way.isRoundabout
+                    ? theme.opacity.roundabout
+                    : isMainRoad
+                    ? theme.opacity.roadMain
+                    : theme.opacity.roadMinor
+                }
               />
             );
           })}
@@ -281,6 +281,8 @@ function MapCanvas() {
       >
         {TITLE_TEXT}
       </h1>
+
+      <ThemeSwitcher />
 
       <div
         style={{
