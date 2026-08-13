@@ -37,7 +37,7 @@ export const themes = {
       park: 0.75,
       roadMain: 0.85,
       roadMinor: 0.55,
-      roundabout: 0.5,
+      roundabout: 0.55,
     },
   },
 };
