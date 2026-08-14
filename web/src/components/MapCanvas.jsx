@@ -15,7 +15,7 @@ import {
 } from "../utils/project";
 import TheatreMarker from "./TheatreMarker";
 import DetailCard from "./DetailCard";
-import ThemeSwitcher from "./ThemeSwitcher";
+import FunctionsDrawer from "./FunctionsDrawer";
 import mapData from "../../../data/mapData.json";
 import { resolveLabelPositions } from "../utils/labelLayout";
 import { themes, defaultThemeId } from "../themes";
@@ -153,6 +153,10 @@ function MapCanvas() {
 
   const [selectedId, setSelectedId] = useState(null);
   const [lastSelectedId, setLastSelectedId] = useState(null);
+  // Adjust isMobile depending on what size of screen to switch from drawer being at top to bottom
+  // Impact on laptop viewing when window isnt full size?
+  const isMobile = viewport.width <= 640;
+  const [functionsOccupiedHeight, setFunctionsOccupiedHeight] = useState(62);
 
   useEffect(() => {
     if (selectedId) setLastSelectedId(selectedId);
@@ -282,18 +286,23 @@ function MapCanvas() {
         {TITLE_TEXT}
       </h1>
 
-      <ThemeSwitcher />
+      <FunctionsDrawer
+        isMobile={isMobile}
+        onOccupiedHeightChange={setFunctionsOccupiedHeight}
+      />
 
       <div
         style={{
           position: "absolute",
-          bottom: "24px",
+          bottom: isMobile ? `${functionsOccupiedHeight + 16}px` : "24px",
           left: "24px",
           width: "320px",
           maxWidth: "calc(100vw - 48px)",
+          zIndex: 4,
           transform: isOpen ? "translateY(0)" : "translateY(16px)",
           opacity: isOpen ? 1 : 0,
-          transition: "transform 0.3s ease, opacity 0.3s ease",
+          transition:
+            "transform 0.3s ease, opacity 0.3s ease, bottom 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)",
           pointerEvents: isOpen ? "auto" : "none",
         }}
       >
