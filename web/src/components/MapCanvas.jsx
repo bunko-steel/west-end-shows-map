@@ -153,8 +153,6 @@ function MapCanvas() {
 
   const [selectedId, setSelectedId] = useState(null);
   const [lastSelectedId, setLastSelectedId] = useState(null);
-  // Adjust isMobile depending on what size of screen to switch from drawer being at top to bottom
-  // Impact on laptop viewing when window isnt full size?
   const isMobile = viewport.width <= 640;
   const [functionsOccupiedHeight, setFunctionsOccupiedHeight] = useState(62);
 
@@ -269,6 +267,7 @@ function MapCanvas() {
           pointerEvents: "none",
         }}
       />
+
       <h1
         ref={titleRef}
         style={{
