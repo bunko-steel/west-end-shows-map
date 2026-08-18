@@ -19,6 +19,7 @@ export const themes = {
       roadMain: 0.7,
       roadMinor: 0.4,
       roundabout: 0.3,
+      tubeLine: 0.5,
     },
   },
   mosaic: {
@@ -38,6 +39,7 @@ export const themes = {
       roadMain: 0.85,
       roadMinor: 0.55,
       roundabout: 0.55,
+      tubeLine: 0.65,
     },
   },
 };

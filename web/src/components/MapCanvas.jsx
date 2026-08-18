@@ -18,6 +18,7 @@ import TheatreMarker from "./TheatreMarker";
 import DetailCard from "./DetailCard";
 import FunctionsDrawer from "./FunctionsDrawer";
 import mapData from "../../../data/mapData.json";
+import tubeData from "../../../data/tubeData.json";
 import { resolveLabelPositions } from "../utils/labelLayout";
 import { themes, defaultThemeId } from "../themes";
 import { useTheme } from "../context/ThemeContext";
@@ -192,7 +193,7 @@ function MapCanvas() {
     );
 
     const zoomBehavior = d3Zoom()
-      .scaleExtent([minCoverScale, fitScale * 3.5])
+      .scaleExtent([minCoverScale, fitScale * 5.5])
       .translateExtent([
         [topLeft.x, topLeft.y],
         [bottomRight.x, bottomRight.y],
@@ -298,6 +299,39 @@ function MapCanvas() {
                     ? theme.opacity.roadMain
                     : theme.opacity.roadMinor
                 }
+              />
+            );
+          })}
+
+          {tubeData.lines.map((line) =>
+            line.segments.map((points, i) => (
+              <path
+                key={`tube-line-${line.id}-${i}`}
+                d={pointsToPath(points, worldBounds, worldCanvas, false)}
+                style={{ stroke: line.colour, fill: "none" }}
+                strokeWidth={2}
+                strokeLinecap="round"
+                opacity={theme.opacity.tubeLine}
+              />
+            ))
+          )}
+
+          {tubeData.stations.map((station) => {
+            const { x, y } = projectPoint(
+              station.lat,
+              station.lng,
+              worldBounds,
+              worldCanvas
+            );
+            return (
+              <circle
+                key={`tube-station-${station.id}`}
+                cx={x}
+                cy={y}
+                r={3.5}
+                style={{ fill: "var(--parchment)", stroke: "var(--ink)" }}
+                strokeWidth={1}
+                opacity={0.9}
               />
             );
           })}

@@ -49,7 +49,7 @@ function TheatreMarker({ theatre, labelPos, isSelected, onSelect }) {
         textAnchor="middle"
         style={{ fontFamily: "var(--font-body)", fill: "var(--ink)" }}
         fontStyle="italic"
-        fontSize="13"
+        fontSize="18"
       >
         {theatre.name}
       </text>
