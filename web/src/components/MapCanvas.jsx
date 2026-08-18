@@ -153,7 +153,7 @@ function MapCanvas() {
 
   const [selectedId, setSelectedId] = useState(null);
   const [lastSelectedId, setLastSelectedId] = useState(null);
-  const isMobile = viewport.width <= 640;
+  const isMobile = viewport.width <= 680;
   const [functionsOccupiedHeight, setFunctionsOccupiedHeight] = useState(62);
 
   useEffect(() => {
