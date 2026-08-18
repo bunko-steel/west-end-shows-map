@@ -8,6 +8,7 @@ import { zoom as d3Zoom, zoomIdentity } from "d3-zoom";
 import { getTheatresWithShows } from "../data";
 import {
   getBounds,
+  getCoreBounds,
   getCanvasDimensions,
   projectToCanvas,
   projectPoint,
@@ -56,6 +57,35 @@ function useFitText(ref, text, { min = 13, max = 30, rightGap = 24 } = {}) {
   }, [ref, text, min, max, rightGap]);
 }
 
+// Initial view, how much we can see
+const INITIAL_VIEW_TRIM_PERCENT = 5;
+
+// Fits arbitrarily sized box into the viewport
+function getFitTransform(
+  viewportWidth,
+  viewportHeight,
+  boxTopLeft,
+  boxBottomRight,
+  padding = 1
+) {
+  const boxWidth = boxBottomRight.x - boxTopLeft.x;
+  const boxHeight = boxBottomRight.y - boxTopLeft.y;
+  const boxCenterX = (boxTopLeft.x + boxBottomRight.x) / 2;
+  const boxCenterY = (boxTopLeft.y + boxBottomRight.y) / 2;
+
+  const scale = Math.min(
+    (viewportWidth * padding) / boxWidth,
+    (viewportHeight * padding) / boxHeight
+  );
+
+  return zoomIdentity
+    .translate(
+      viewportWidth / 2 - boxCenterX * scale,
+      viewportHeight / 2 - boxCenterY * scale
+    )
+    .scale(scale);
+}
+
 function useWindowSize() {
   const [size, setSize] = useState({
     width: window.innerWidth,
@@ -75,7 +105,7 @@ function MapCanvas() {
   const viewport = useWindowSize();
 
   // Get label positions just once at the start, not recalculating at every re-render
-  const { worldBounds, worldCanvas, positioned, labelPositions } =
+  const { worldBounds, worldCanvas, positioned, labelPositions, coreBox } =
     useMemo(() => {
       const theatres = getTheatresWithShows();
       const worldBounds = getBounds(theatres);
@@ -89,9 +119,34 @@ function MapCanvas() {
         ...projectToCanvas(theatre, worldBounds, worldCanvas),
       }));
       const labelPositions = resolveLabelPositions(positioned, 13);
-      return { worldBounds, worldCanvas, positioned, labelPositions };
+
+      const trimmedBounds = getCoreBounds(theatres, INITIAL_VIEW_TRIM_PERCENT);
+      const coreBox = {
+        topLeft: projectPoint(
+          trimmedBounds.maxLat,
+          trimmedBounds.minLng,
+          worldBounds,
+          worldCanvas
+        ),
+        bottomRight: projectPoint(
+          trimmedBounds.minLat,
+          trimmedBounds.maxLng,
+          worldBounds,
+          worldCanvas
+        ),
+      };
+
+      return { worldBounds, worldCanvas, positioned, labelPositions, coreBox };
     }, []);
-  const [transform, setTransform] = useState(zoomIdentity);
+  const [transform, setTransform] = useState(() =>
+    getFitTransform(
+      viewport.width,
+      viewport.height,
+      coreBox.topLeft,
+      coreBox.bottomRight,
+      0.85
+    )
+  );
 
   const { themeId } = useTheme();
   const theme = themes[themeId] ?? themes[defaultThemeId];
@@ -106,6 +161,13 @@ function MapCanvas() {
     const fitScale = Math.min(
       viewport.width / worldCanvas.width,
       viewport.height / worldCanvas.height
+    );
+    const initialTransform = getFitTransform(
+      viewport.width,
+      viewport.height,
+      coreBox.topLeft,
+      coreBox.bottomRight,
+      0.85
     );
 
     const topLeft = projectPoint(
@@ -128,13 +190,6 @@ function MapCanvas() {
       viewport.width / dataWidth,
       viewport.height / dataHeight
     );
-
-    const initialTransform = zoomIdentity
-      .translate(
-        (viewport.width - worldCanvas.width * fitScale) / 2,
-        (viewport.height - worldCanvas.height * fitScale) / 2
-      )
-      .scale(fitScale);
 
     const zoomBehavior = d3Zoom()
       .scaleExtent([minCoverScale, fitScale * 3.5])

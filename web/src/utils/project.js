@@ -35,6 +35,33 @@ export function getBounds(theatres) {
   };
 }
 
+function median(values) {
+  const sorted = values.slice().sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+}
+
+// Bounds for the initial view so that we dont look at unrendered parts of the map
+// Exclude outlier theatres in these calculations
+export function getCoreBounds(theatres, exclusionPercent = 5) {
+  const medianLat = median(theatres.map((t) => t.lat));
+  const medianLng = median(theatres.map((t) => t.lng));
+  const cosLat = Math.cos((medianLat * Math.PI) / 180);
+
+  const byDistance = theatres
+    .map((theatre) => {
+      const dLat = theatre.lat - medianLat;
+      const dLng = (theatre.lng - medianLng) * cosLat;
+      return { theatre, dist: Math.sqrt(dLat * dLat + dLng * dLng) };
+    })
+    .sort((a, b) => a.dist - b.dist);
+
+  const keepCount = Math.ceil(byDistance.length * (1 - exclusionPercent / 100));
+  const core = byDistance.slice(0, keepCount).map((entry) => entry.theatre);
+
+  return getBounds(core);
+}
+
 // Figures out the right canvas aspect ratio from real coordinates,
 // correcting for the fact that longitude degrees are "narrower" than
 // latitude degrees this far from the equator.
