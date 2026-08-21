@@ -14,7 +14,7 @@ const MOBILE_TASSEL_SCALE = 0.8;
 // before letting go snaps it open instead of closed.
 const PULL_OPEN_FRACTION = 0.4;
 
-function FunctionsDrawer({ isMobile, onOccupiedHeightChange }) {
+function FunctionsDrawer({ isMobile }) {
   const [isOpen, setIsOpen] = useState(false);
   const [revealHeight, setRevealHeight] = useState(0);
   // null when not dragging. While dragging, this is the panel's current height in px
@@ -44,14 +44,6 @@ function FunctionsDrawer({ isMobile, onOccupiedHeightChange }) {
     }
     return () => window.removeEventListener("resize", computeReveal);
   }, [computeReveal]);
-
-  useLayoutEffect(() => {
-    if (!isMobile || !onOccupiedHeightChange) return;
-    const barHeight = barRef.current?.offsetHeight ?? 0;
-    onOccupiedHeightChange(
-      EDGE_MARGIN + barHeight + (isOpen ? revealHeight : 0)
-    );
-  }, [isMobile, isOpen, revealHeight, onOccupiedHeightChange]);
 
   const toggle = () => setIsOpen((open) => !open);
 
@@ -114,9 +106,7 @@ function FunctionsDrawer({ isMobile, onOccupiedHeightChange }) {
         padding: "9px 16px",
         background: "var(--curtain-red)",
         border: "none",
-        [isMobile ? "borderBottom" : "borderTop"]: isOpen
-          ? "1px solid var(--ink)"
-          : "none",
+        borderTop: isOpen ? "1px solid var(--ink)" : "none",
         cursor: "pointer",
         flexShrink: 0,
       }}
@@ -142,9 +132,9 @@ function FunctionsDrawer({ isMobile, onOccupiedHeightChange }) {
         top: 5,
         right: -10,
         transformOrigin: "top right",
-        transform: isMobile
-          ? `scale(${MOBILE_TASSEL_SCALE})`
-          : `translateY(${currentReveal}px)`,
+        transform: `translateY(${currentReveal}px)${
+          isMobile ? ` scale(${MOBILE_TASSEL_SCALE})` : ""
+        }`,
         transition:
           dragReveal !== null ? "none" : `transform 0.5s ${ROPE_SETTLE}`,
       }}
@@ -169,21 +159,21 @@ function FunctionsDrawer({ isMobile, onOccupiedHeightChange }) {
     flexDirection: "column",
   };
 
+  // Mobile version
   if (isMobile) {
-    // Layout for mobile versiom
     return (
       <div
         style={{
           position: "fixed",
-          bottom: `${EDGE_MARGIN}px`,
+          top: `${EDGE_MARGIN}px`,
           left: "24px",
           right: "24px",
           zIndex: 6,
         }}
       >
         <div ref={wrapperRef} style={visualBoxStyle}>
-          {bar}
           {revealWindow}
+          {bar}
         </div>
         {tasselOverlay}
       </div>

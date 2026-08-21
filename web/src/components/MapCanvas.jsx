@@ -23,8 +23,12 @@ import { resolveLabelPositions } from "../utils/labelLayout";
 import { themes, defaultThemeId } from "../themes";
 import { useTheme } from "../context/ThemeContext";
 
-// Shrinks an element's font-size until its rendered text actually fits its available width
-function useFitText(ref, text, { min = 13, max = 30, rightGap = 24 } = {}) {
+// Shrinks an element's font-size until its rendered text actually fits its available width.
+function useFitText(
+  ref,
+  text,
+  { min = 13, max = 30, leftGap = 24, rightGap = 24 } = {}
+) {
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -33,7 +37,7 @@ function useFitText(ref, text, { min = 13, max = 30, rightGap = 24 } = {}) {
       const parent = el.offsetParent;
       if (!parent) return;
 
-      const available = parent.clientWidth - el.offsetLeft - rightGap;
+      const available = parent.clientWidth - leftGap - rightGap;
 
       let fontSize = max;
       el.style.whiteSpace = "nowrap";
@@ -55,7 +59,7 @@ function useFitText(ref, text, { min = 13, max = 30, rightGap = 24 } = {}) {
     }
 
     return () => window.removeEventListener("resize", fit);
-  }, [ref, text, min, max, rightGap]);
+  }, [ref, text, min, max, leftGap, rightGap]);
 }
 
 // Initial view, how much we can see
@@ -152,9 +156,17 @@ function MapCanvas() {
   const { themeId } = useTheme();
   const theme = themes[themeId] ?? themes[defaultThemeId];
 
+  const isMobile = viewport.width <= 680;
+
   const TITLE_TEXT = "THE WEST END";
   const titleRef = useRef(null);
-  useFitText(titleRef, TITLE_TEXT, { min: 13, max: 30 });
+  useFitText(
+    titleRef,
+    TITLE_TEXT,
+    isMobile
+      ? { min: 13, max: 30, leftGap: 32, rightGap: 32 }
+      : { min: 13, max: 30, leftGap: 44, rightGap: 24 }
+  );
 
   useEffect(() => {
     const svgEl = select(svgRef.current);
@@ -209,8 +221,6 @@ function MapCanvas() {
 
   const [selectedId, setSelectedId] = useState(null);
   const [lastSelectedId, setLastSelectedId] = useState(null);
-  const isMobile = viewport.width <= 680;
-  const [functionsOccupiedHeight, setFunctionsOccupiedHeight] = useState(62);
 
   useEffect(() => {
     if (selectedId) setLastSelectedId(selectedId);
@@ -351,7 +361,7 @@ function MapCanvas() {
       <div
         style={{
           position: "absolute",
-          inset: "20px",
+          inset: "12px",
           border: "1.5px solid var(--ink)",
           pointerEvents: "none",
         }}
@@ -361,36 +371,43 @@ function MapCanvas() {
         ref={titleRef}
         style={{
           position: "absolute",
-          top: "36px",
-          left: "44px",
           margin: 0,
           fontFamily: "var(--font-display)",
           color: "var(--ink)",
           letterSpacing: "0.12em",
           fontWeight: "normal",
           pointerEvents: "none",
+          ...(isMobile
+            ? {
+                bottom: "32px",
+                left: "50%",
+                transform: "translateX(-50%)",
+                textAlign: "center",
+              }
+            : {
+                top: "36px",
+                left: "44px",
+              }),
         }}
       >
         {TITLE_TEXT}
       </h1>
 
-      <FunctionsDrawer
-        isMobile={isMobile}
-        onOccupiedHeightChange={setFunctionsOccupiedHeight}
-      />
+      <FunctionsDrawer isMobile={isMobile} />
 
       <div
         style={{
           position: "absolute",
-          bottom: isMobile ? `${functionsOccupiedHeight + 16}px` : "24px",
-          left: "24px",
+          bottom: "24px",
+          left: isMobile ? "50%" : "24px",
           width: "320px",
           maxWidth: "calc(100vw - 48px)",
           zIndex: 4,
-          transform: isOpen ? "translateY(0)" : "translateY(16px)",
+          transform: isMobile
+            ? `translate(-50%, ${isOpen ? 0 : 16}px)`
+            : `translateY(${isOpen ? 0 : 16}px)`,
           opacity: isOpen ? 1 : 0,
-          transition:
-            "transform 0.3s ease, opacity 0.3s ease, bottom 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)",
+          transition: "transform 0.3s ease, opacity 0.3s ease",
           pointerEvents: isOpen ? "auto" : "none",
         }}
       >
