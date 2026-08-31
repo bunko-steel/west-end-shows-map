@@ -5,7 +5,7 @@
 import { useState, useEffect, useLayoutEffect, useRef, useMemo } from "react";
 import { select } from "d3-selection";
 import { zoom as d3Zoom, zoomIdentity } from "d3-zoom";
-import { getTheatresWithShows } from "../data";
+import { getTheatresWithShows, lastUpdated } from "../data";
 import {
   getBounds,
   getCoreBounds,
@@ -400,7 +400,7 @@ function MapCanvas() {
           position: "absolute",
           bottom: "24px",
           left: isMobile ? "50%" : "24px",
-          width: "320px",
+          width: "580px",
           maxWidth: "calc(100vw - 48px)",
           zIndex: 4,
           transform: isMobile
@@ -412,7 +412,11 @@ function MapCanvas() {
         }}
       >
         {panelTheatre && (
-          <DetailCard theatre={panelTheatre} onClose={handleClose} />
+          <DetailCard
+            theatre={panelTheatre}
+            onClose={handleClose}
+            lastUpdated={lastUpdated}
+          />
         )}
       </div>
     </div>
